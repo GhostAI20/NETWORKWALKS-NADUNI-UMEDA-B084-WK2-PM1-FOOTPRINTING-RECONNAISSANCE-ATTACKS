@@ -28,7 +28,7 @@
 
 ## 📖 2. INTRODUCTION
 
-This report documents my Week 2 work as part of my ongoing internship program at Networkwalks. It covers footprinting the networkwalks.com domain using multiple Kali Linux tools (W2-PM1) and network scanning using Zenmap.
+This report documents my Week 2 work as part of my ongoing internship program at Networkwalks. It covers footprinting the networkwalks.com domain using multiple Kali Linux tools (W2-PM1) and network scanning using Zenmap on scanme.nmap.org, the official Nmap test target.
 
 The activities focus on different reconnaissance and information-gathering techniques, from:
 - Collecting publicly available information about a target
@@ -209,16 +209,22 @@ Findings:
 - Ports tab in Zenmap gives a clear list of all open ports in one view
 - This view helps to quickly identify which services are exposed
 
-#### 8.2 Topology + Hosts Viewer
+#### 8.2 Topology View
 
-![Zenmap Topology and Hosts Viewer](screenshots/10-zenmap-hosts-viewer.png)
+![Zenmap Topology](screenshots/10-zenmap-topology.png)
 
 Findings:
 - Topology view shows the network path from localhost (attacker machine) to the target host
-- Target host is shown as a node (red dot) at the end of the route
-- Hosts Viewer shows OS details - OS match: Linux / AT&T / Unix with high accuracy
-- Hosts Viewer also shows open ports count and host details in one place
+- Target host is shown as a node at the end of the route
 - Topology helps to understand how many hops are between attacker and target
+
+#### 8.3 Hosts Viewer
+
+![Zenmap Hosts Viewer](screenshots/11-zenmap-hosts-viewer.png)
+
+Findings:
+- Hosts Viewer shows OS details - OS match: Linux with high accuracy
+- Hosts Viewer also shows open ports count and host details in one place
 
 Summary: Zenmap made the Nmap results easier to understand visually. Intense Scan gave ports, services, OS and traceroute in one scan, while Ports/Hosts, Topology and Hosts Viewer views helped to analyze the same results from different angles.
 
@@ -253,11 +259,11 @@ Lesson Learned: Always check if the tool is installed before running, check inte
 | 4 | HTTP technical information exposed | Curl returned HTTP response headers | May assist technology fingerprinting and further enumeration | Low |
 | 5 | WAF technology identifiable | Wafw00f identified ModSecurity (SpiderLabs) | Reveals information about the web application's security architecture | Low |
 | 6 | DNS infrastructure information exposed | Dnsrecon identified DNS, mail, and service-related records, Bind 9.16.23 | DNS information can help build a broader infrastructure profile | Medium |
-| 7 | Open ports and services exposed | Nmap identified open ports 80 and 443 | Every open service widens the attack surface | Medium |
-| 8 | Multiple open ports and services exposed (Zenmap) | Zenmap Intense Scan on scanme.nmap.org identified multiple open ports with service versions | Each open service is a potential entry point if not patched and hardened | Medium |
-| 9 | OS information exposed (Zenmap) | Zenmap Hosts Viewer identified OS with high accuracy | OS fingerprinting helps attackers select OS-specific techniques | Low |
+| 7 | Open ports and services exposed (networkwalks.com) | Nmap identified open ports 80 and 443 | Every open service widens the attack surface | Medium |
+| 8 | Multiple open ports and services exposed (scanme.nmap.org - Zenmap) | Zenmap Intense Scan on scanme.nmap.org identified multiple open ports with service versions, including 22, 80, 3306 and 2222 | Each open service is a potential entry point if not patched and hardened. Exposed database port 3306 increases risk | High |
+| 9 | OS information exposed (Zenmap) | Zenmap Hosts Viewer identified OS as Linux with high accuracy | OS fingerprinting helps attackers select OS-specific techniques | Low |
 
-Risk Level Key: Critical / Medium / Low
+Risk Level Key: Critical / High / Medium / Low
 
 The risks listed above are based on observations made during the footprinting and network scanning exercises and should not be considered confirmed vulnerabilities. No exploitation or vulnerability verification was carried out during this module.
 
@@ -273,9 +279,8 @@ The risks listed above are based on observations made during the footprinting an
 | 4 | HTTP technical information exposed | Review response headers to minimize unnecessary technical disclosure |
 | 5 | WAF technology identifiable | Keep ModSecurity and its rulesets properly maintained, regularly review WAF configurations and logs |
 | 6 | DNS infrastructure information exposed | Review DNS records regularly and remove unnecessary or obsolete entries |
-| 7 | Open ports visible | Close unused ports and disable unnecessary services, maintain up-to-date asset inventory |
-| 8 | Multiple open ports visible (Zenmap) | Close unused ports found in Zenmap scan, disable unnecessary services, and only expose required ports |
-| 9 | OS information exposed (Zenmap) | Keep OS patched and updated, limit OS fingerprinting where possible by firewall rules |
+| 7 | Open ports visible (networkwalks.com + Zenmap) | Close unused ports, disable unnecessary services, only expose required ports, and maintain up-to-date asset inventory. Block public access to database port 3306 |
+| 8 | OS information exposed (Zenmap) | Keep OS patched and updated, limit OS fingerprinting where possible by firewall rules |
 
 ---
 
@@ -283,7 +288,7 @@ The risks listed above are based on observations made during the footprinting an
 
 During Week 2 of my Cybersecurity & Ethical Hacking internship, I worked on footprinting, OSINT, and network scanning. These activities allowed me to practice gathering publicly available information about organizations and identifying active hosts and services.
 
-For the footprinting activities, I used WHOIS, WhatWeb, Nslookup, Curl, Wafw00f, DNSRecon and Nmap. For graphical scanning, I used Zenmap with Intense Scan profile on scanme.nmap.org. Each tool provided a different type of information, helping me understand how multiple sources and techniques can be combined to build a broader picture of a target's public-facing environment.
+For the footprinting activities, I used WHOIS, WhatWeb, Nslookup, Curl, Wafw00f, DNSRecon and Nmap on networkwalks.com. For graphical scanning, I used Zenmap with Intense Scan profile on scanme.nmap.org, the official Nmap test target. Each tool provided a different type of information, helping me understand how multiple sources and techniques can be combined to build a broader picture of a target's public-facing environment.
 
 One of the main lessons from this week was the importance of reconnaissance and information gathering before further security testing. I also learned that not every piece of publicly available information represents a vulnerability and that findings must be interpreted in context.
 
@@ -312,8 +317,9 @@ Finally, these activities reinforced the importance of accurate documentation, r
 - screenshots/07-nmap.png
 - screenshots/08-zenmap-intense.png
 - screenshots/09-zenmap-ports.png
-- screenshots/10-zenmap-hosts-viewer.png
-- screenshots/errors/
+- screenshots/10-zenmap-topology.png
+- screenshots/11-zenmap-hosts-viewer.png
+- screenshots/errors/error_1_whatweb_no_internet.png
 
 ---
 
@@ -344,20 +350,21 @@ Naduni Umeda
 - Repository: GitHub
 
 ## 📁 Project Structure
-
 NETWORKWALKS-NADUNI-UMEDA-B084-WK2-PM1-FOOTPRINTING-RECONNAISSANCE-ATTACKS/
-README.md
-screenshots/
-01-whois.png
-02-whatweb.png
-03-nslookup.png
-04-curl.png
-05-wafw00f.png
-06-dnsrecon.png
-07-nmap.png
-08-zenmap-intense.png
-09-zenmap-ports.png
-10-zenmap-hosts-viewer.png
-errors/
+├── README.md
+├── screenshots/
+│   ├── 01-whois.png
+│   ├── 02-whatweb.png
+│   ├── 03-nslookup.png
+│   ├── 04-curl.png
+│   ├── 05-wafw00f.png
+│   ├── 06-dnsrecon.png
+│   ├── 07-nmap.png
+│   ├── 08-zenmap-intense.png
+│   ├── 09-zenmap-ports.png
+│   ├── 10-zenmap-topology.png
+│   ├── 11-zenmap-hosts-viewer.png
+│   └── errors/
+│       └── error_1_whatweb_no_internet.png
 
 -End-
